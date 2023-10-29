@@ -10,5 +10,8 @@
   "scripts": {
     "start": "wrangler dev --test-scheduled",
     "deploy": "wrangler publish"
+  },
+  "dependencies": {
+    "@typescript-eslint/parser": "^6.9.0"
   }
 }
