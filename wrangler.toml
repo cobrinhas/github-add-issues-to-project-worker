@@ -1,0 +1,7 @@
+name = "github-add-issues-to-project-worker"
+main = "src/index.ts"
+compatibility_date = "2023-03-25"
+
+
+[triggers]
+crons = [ "0 * * * *" ]
