@@ -1,18 +1,20 @@
 {
-  "name": "github-add-issues-to-project-worker",
-  "version": "0.0.0",
-  "devDependencies": {
-    "@cloudflare/workers-types": "^4.20230321.0",
-    "typescript": "^5.0.2",
-    "wrangler": "^3.15.0"
-  },
-  "private": true,
-  "scripts": {
-    "start": "wrangler dev --test-scheduled",
-    "deploy": "wrangler publish"
-  },
-  "dependencies": {
-    "@typescript-eslint/eslint-plugin": "^6.9.0",
-    "@typescript-eslint/parser": "^6.9.0"
-  }
+	"name": "github-add-issues-to-project-worker",
+	"version": "0.0.0",
+	"devDependencies": {
+		"@cloudflare/workers-types": "^4.20230321.0",
+		"typescript": "^5.0.2",
+		"wrangler": "^3.15.0"
+	},
+	"private": true,
+	"scripts": {
+		"start": "wrangler dev --test-scheduled",
+		"deploy": "wrangler publish",
+		"lint": "prettier --plugin-search-dir . --check . && eslint .",
+		"format": "prettier --plugin-search-dir . --write ."
+	},
+	"dependencies": {
+		"@typescript-eslint/eslint-plugin": "^6.9.0",
+		"@typescript-eslint/parser": "^6.9.0"
+	}
 }

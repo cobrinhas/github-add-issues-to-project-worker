@@ -10,9 +10,7 @@ This worker was bootstrapped using [worker brick](https://github.com/dart-pacote
 
 Run the local server via `npm run start`
 
-
-Trigger an instant cronjob via `curl "http://localhost:8787/__scheduled?cron=*+*+*+*+*"` 
-
+Trigger an instant cronjob via `curl "http://localhost:8787/__scheduled?cron=*+*+*+*+*"`
 
 ## Deploy
 
