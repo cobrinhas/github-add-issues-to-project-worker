@@ -8,7 +8,7 @@ export default {
 	): Promise<void> {
 		const config = fromEnv(env);
 
-		console.info(`Hello ${config.awesomeSecret}!`);
+		console.info(`Hello ${config.githubAccessToken}!`);
 
 		return Promise.resolve();
 	}

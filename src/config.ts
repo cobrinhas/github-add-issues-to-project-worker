@@ -1,13 +1,13 @@
 export interface Env {
-	AWESOME_SECRET: string;
+	GITHUB_ACCESS_TOKEN: string;
 }
 
 export interface Config {
-	awesomeSecret: string;
+	githubAccessToken: string;
 }
 
 export function fromEnv(env: Env): Config {
 	return {
-		awesomeSecret: env.AWESOME_SECRET
+		githubAccessToken: env.GITHUB_ACCESS_TOKEN
 	};
 }
