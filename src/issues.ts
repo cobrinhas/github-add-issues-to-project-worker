@@ -5,33 +5,39 @@ import { IssueInfo, IssueState } from './data';
 export async function createdBy(
 	githubToken: string,
 	owner: string,
-	state: IssueState
+	state: IssueState,
+	firstNElement: string
 ): Promise<IssueInfo[]> {
 	return await searchIssues(
 		githubToken,
-		`type:issue is:public author:${owner} ${state}`
+		`type:issue is:public author:${owner} ${state}`,
+		firstNElement
 	);
 }
 
 export async function assigneeTo(
 	githubToken: string,
 	owner: string,
-	state: IssueState
+	state: IssueState,
+	firstNElement: string
 ): Promise<IssueInfo[]> {
 	return await searchIssues(
 		githubToken,
-		`type:issue is:public assignee:${owner} ${state}`
+		`type:issue is:public assignee:${owner} ${state}`,
+		firstNElement
 	);
 }
 
 async function searchIssues(
 	githubToken: string,
-	queryString: string
+	queryString: string,
+	firstNElement: string
 ): Promise<IssueInfo[]> {
 	const firstResult = await searchIssuesAfterCursor(
 		githubToken,
 		`${queryString}`,
-		''
+		'',
+		firstNElement
 	);
 
 	if (!firstResult.search.pageInfo.hasNextPage) {
@@ -46,7 +52,8 @@ async function searchIssues(
 		const newResult = await searchIssuesAfterCursor(
 			githubToken,
 			`${queryString}`,
-			endCursor
+			endCursor,
+			firstNElement
 		);
 
 		result = result.concat(newResult.search.edges);
@@ -63,7 +70,8 @@ async function searchIssues(
 async function searchIssuesAfterCursor(
 	githubToken: string,
 	queryString: string,
-	afterArg: string
+	afterArg: string,
+	firstNElement: string
 ): Promise<GraphQlQueryResponseData> {
 	const graphqlWithAuth = graphql.defaults({
 		headers: {
@@ -73,29 +81,32 @@ async function searchIssuesAfterCursor(
 
 	return await graphqlWithAuth(
 		`
-            query{
-                search(first: 10, type: ISSUE, ${afterArg}, query: "${queryString}") {
+			query($first: Int){
+				search(first: $first, type: ISSUE, ${afterArg}, query: "${queryString}") {
                     issueCount
                     pageInfo {
-                      hasNextPage
-                      endCursor
+						hasNextPage
+						endCursor
                     }
                     edges {
-                      node {
-                        ... on Issue {
-                          createdAt
-                          title
-                          url
-						  number
-						  id
-                          repository {
-                            name
-                          }
-                        }
-                      }
+						node {
+							... on Issue {
+								createdAt
+								title
+								url
+								number
+								id
+								repository {
+									name
+								}
+							}
+                      	}
                     }
                 }
             }
-        `
+        `,
+		{
+			first: Number(`${firstNElement}`)
+		}
 	);
 }

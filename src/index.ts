@@ -10,17 +10,20 @@ export default {
 	): Promise<void> {
 		const config = fromEnv(env);
 
-		console.info(`Hello ${config.githubAccessToken}!`);
+		console.info(`githubUsername: ${config.githubUsername}`);
+		console.info(`firstNElements: ${config.firstNElements ?? '10'}`);
 
-		await getAllIssues(config.githubAccessToken, 'rutesantos4').then(
-			(result) => {
-				console.log(`getAllIssues => ${result.length}`);
-				for (let index = 0; index < result.length; index++) {
-					const element = result[index];
-					console.log(element);
-				}
+		await getAllIssues(
+			config.githubAccessToken,
+			config.githubUsername,
+			config.firstNElements ?? '10'
+		).then((result) => {
+			console.log(`getAllIssues => ${result.length}`);
+			for (let index = 0; index < result.length; index++) {
+				const element = result[index];
+				console.log(element);
 			}
-		);
+		});
 
 		return Promise.resolve();
 	}
@@ -28,18 +31,21 @@ export default {
 
 async function getAllIssues(
 	githubAccessToken: string,
-	user: string
+	githubUsername: string,
+	firstNElements: string
 ): Promise<IssueInfo[]> {
 	const createdByResult: IssueInfo[] = await createdBy(
 		githubAccessToken ?? '',
-		user,
-		IssueState.Open
+		githubUsername,
+		IssueState.Open,
+		firstNElements
 	);
 
 	const assigneeToResult: IssueInfo[] = await assigneeTo(
 		githubAccessToken ?? '',
-		user,
-		IssueState.Open
+		githubUsername,
+		IssueState.Open,
+		firstNElements
 	);
 
 	console.log(`createdBy => ${createdByResult.length}`);
