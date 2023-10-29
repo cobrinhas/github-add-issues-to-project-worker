@@ -1,7 +1,4 @@
-import { Env, fromEnv } from "./config";
-
-
-
+import { Env, fromEnv } from './config';
 
 export default {
 	async scheduled(
@@ -14,5 +11,5 @@ export default {
 		console.info(`Hello ${config.awesomeSecret}!`);
 
 		return Promise.resolve();
-	},
+	}
 };
