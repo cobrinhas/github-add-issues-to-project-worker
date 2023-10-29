@@ -15,5 +15,9 @@
 	"env": {
 		"browser": true,
 		"es2016": true
+	},
+	"rules": {
+		"no-unused-vars": "off",
+		"@typescript-eslint/no-unused-vars": ["warn"]
 	}
 }
