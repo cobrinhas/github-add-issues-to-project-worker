@@ -1,6 +1,7 @@
 import { Env, fromEnv } from './config';
 import { IssueInfo, IssueState, IssueVisibility } from './data';
 import { assigneeTo, createdBy } from './issues';
+import { getProjectByNumber } from './projects';
 
 export default {
 	async scheduled(
@@ -13,7 +14,7 @@ export default {
 		console.info(`githubUsername: ${config.githubUsername}`);
 		console.info(`queryPageSize: ${config.queryPageSize}`);
 
-		return getAllIssues(
+		await getAllIssues(
 			config.githubAccessToken,
 			config.githubUsername,
 			config.queryPageSize
@@ -23,6 +24,14 @@ export default {
 				const element = result[index];
 				console.log(element);
 			}
+		});
+
+		return await getProjectByNumber(
+			config.githubAccessToken,
+			config.githubUsername,
+			config.githubProjectNumber
+		).then((result) => {
+			console.log(result);
 		});
 	}
 };
