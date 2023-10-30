@@ -38,7 +38,6 @@ async function searchIssues(
 	const firstResult = await searchIssuesAfterCursor(
 		githubToken,
 		`${queryString}`,
-		'',
 		queryPageSize
 	);
 
@@ -54,8 +53,8 @@ async function searchIssues(
 		const newResult = await searchIssuesAfterCursor(
 			githubToken,
 			`${queryString}`,
-			endCursor,
-			queryPageSize
+			queryPageSize,
+			endCursor
 		);
 
 		result = result.concat(newResult.search.edges);
@@ -71,8 +70,8 @@ async function searchIssues(
 async function searchIssuesAfterCursor(
 	githubToken: string,
 	queryString: string,
-	afterArg: string,
-	queryPageSize: number
+	queryPageSize: number,
+	afterArg: string = ''
 ): Promise<GraphQlQueryResponseData> {
 	const graphqlWithAuth = graphql.defaults({
 		headers: {
