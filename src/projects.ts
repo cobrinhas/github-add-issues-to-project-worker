@@ -4,13 +4,15 @@ import { ProjectInfo } from './data/project-info';
 export async function getProjectByNumber(
 	githubToken: string,
 	owner: string,
-	projectNumber: number
+	projectNumber: number,
+	queryPageSize: number
 ): Promise<ProjectInfo> {
 	const projectInfo = async () => {
 		const firstResult = await searchProjectByNumber(
 			githubToken,
 			owner,
-			projectNumber
+			projectNumber,
+            queryPageSize
 		);
 
 		if (!firstResult.user.projectV2.items.pageInfo.hasNextPage) {
@@ -26,6 +28,7 @@ export async function getProjectByNumber(
 				githubToken,
 				owner,
 				projectNumber,
+                queryPageSize,
 				endCursor
 			);
 
@@ -49,6 +52,7 @@ async function searchProjectByNumber(
 	githubToken: string,
 	owner: string,
 	projectNumber: number,
+	queryPageSize: number,
 	afterArg = ''
 ): Promise<GraphQlQueryResponseData> {
 	const graphqlWithAuth = graphql.defaults({
@@ -59,7 +63,7 @@ async function searchProjectByNumber(
 
 	return await graphqlWithAuth(
 		`
-        query($userLogin: String!, $number: Int!){
+        query($userLogin: String!, $number: Int!, $first: Int){
             user(login: $userLogin){
               projectV2(number: $number) {
                 createdAt
@@ -67,7 +71,7 @@ async function searchProjectByNumber(
                 id
                 title
                 number
-                items(first: 10, ${afterArg}) {
+                items(first: $first, ${afterArg}) {
                     pageInfo {
 						hasNextPage
 						endCursor
@@ -93,7 +97,8 @@ async function searchProjectByNumber(
         `,
 		{
 			userLogin: `${owner}`,
-			number: Number(`${projectNumber}`)
+			number: Number(`${projectNumber}`),
+			first: Number(`${queryPageSize}`)
 		}
 	);
 }

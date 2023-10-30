@@ -29,7 +29,8 @@ export default {
 		return await getProjectByNumber(
 			config.githubAccessToken,
 			config.githubUsername,
-			config.githubProjectNumber
+			config.githubProjectNumber,
+			config.queryPageSize
 		).then((result) => {
 			console.log(result);
 		});
