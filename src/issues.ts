@@ -6,12 +6,12 @@ export async function createdBy(
 	githubToken: string,
 	owner: string,
 	state: IssueState,
-	firstNElement: string
+	queryPageSize: number
 ): Promise<IssueInfo[]> {
 	return await searchIssues(
 		githubToken,
 		`type:issue is:public author:${owner} ${state}`,
-		firstNElement
+		queryPageSize
 	);
 }
 
@@ -19,25 +19,25 @@ export async function assigneeTo(
 	githubToken: string,
 	owner: string,
 	state: IssueState,
-	firstNElement: string
+	queryPageSize: number
 ): Promise<IssueInfo[]> {
 	return await searchIssues(
 		githubToken,
 		`type:issue is:public assignee:${owner} ${state}`,
-		firstNElement
+		queryPageSize
 	);
 }
 
 async function searchIssues(
 	githubToken: string,
 	queryString: string,
-	firstNElement: string
+	queryPageSize: number
 ): Promise<IssueInfo[]> {
 	const firstResult = await searchIssuesAfterCursor(
 		githubToken,
 		`${queryString}`,
 		'',
-		firstNElement
+		queryPageSize
 	);
 
 	if (!firstResult.search.pageInfo.hasNextPage) {
@@ -53,7 +53,7 @@ async function searchIssues(
 			githubToken,
 			`${queryString}`,
 			endCursor,
-			firstNElement
+			queryPageSize
 		);
 
 		result = result.concat(newResult.search.edges);
@@ -71,7 +71,7 @@ async function searchIssuesAfterCursor(
 	githubToken: string,
 	queryString: string,
 	afterArg: string,
-	firstNElement: string
+	queryPageSize: number
 ): Promise<GraphQlQueryResponseData> {
 	const graphqlWithAuth = graphql.defaults({
 		headers: {
@@ -106,7 +106,7 @@ async function searchIssuesAfterCursor(
             }
         `,
 		{
-			first: Number(`${firstNElement}`)
+			first: Number(`${queryPageSize}`)
 		}
 	);
 }

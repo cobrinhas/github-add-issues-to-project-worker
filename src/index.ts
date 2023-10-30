@@ -11,12 +11,12 @@ export default {
 		const config = fromEnv(env);
 
 		console.info(`githubUsername: ${config.githubUsername}`);
-		console.info(`firstNElements: ${config.firstNElements ?? '10'}`);
+		console.info(`queryPageSize: ${config.queryPageSize}`);
 
-		await getAllIssues(
+		return getAllIssues(
 			config.githubAccessToken,
 			config.githubUsername,
-			config.firstNElements ?? '10'
+			config.queryPageSize
 		).then((result) => {
 			console.log(`getAllIssues => ${result.length}`);
 			for (let index = 0; index < result.length; index++) {
@@ -24,28 +24,26 @@ export default {
 				console.log(element);
 			}
 		});
-
-		return Promise.resolve();
 	}
-};
+}
 
 async function getAllIssues(
 	githubAccessToken: string,
 	githubUsername: string,
-	firstNElements: string
+	queryPageSize: number
 ): Promise<IssueInfo[]> {
 	const createdByResult: IssueInfo[] = await createdBy(
 		githubAccessToken ?? '',
 		githubUsername,
 		IssueState.Open,
-		firstNElements
+		queryPageSize
 	);
 
 	const assigneeToResult: IssueInfo[] = await assigneeTo(
 		githubAccessToken ?? '',
 		githubUsername,
 		IssueState.Open,
-		firstNElements
+		queryPageSize
 	);
 
 	console.log(`createdBy => ${createdByResult.length}`);
