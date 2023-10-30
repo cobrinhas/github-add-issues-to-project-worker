@@ -1,5 +1,5 @@
 import { Env, fromEnv } from './config';
-import { IssueInfo, IssueState } from './data';
+import { IssueInfo, IssueState, IssueVisibility } from './data';
 import { assigneeTo, createdBy } from './issues';
 
 export default {
@@ -25,7 +25,7 @@ export default {
 			}
 		});
 	}
-}
+};
 
 async function getAllIssues(
 	githubAccessToken: string,
@@ -33,16 +33,18 @@ async function getAllIssues(
 	queryPageSize: number
 ): Promise<IssueInfo[]> {
 	const createdByResult: IssueInfo[] = await createdBy(
-		githubAccessToken ?? '',
+		githubAccessToken,
 		githubUsername,
 		IssueState.Open,
+		IssueVisibility.Public,
 		queryPageSize
 	);
 
 	const assigneeToResult: IssueInfo[] = await assigneeTo(
-		githubAccessToken ?? '',
+		githubAccessToken,
 		githubUsername,
 		IssueState.Open,
+		IssueVisibility.Public,
 		queryPageSize
 	);
 

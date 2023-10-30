@@ -1,16 +1,17 @@
 import { graphql } from '@octokit/graphql';
 import { GraphQlQueryResponseData } from '@octokit/graphql/dist-types/types';
-import { IssueInfo, IssueState } from './data';
+import { IssueInfo, IssueState, IssueVisibility } from './data';
 
 export async function createdBy(
 	githubToken: string,
 	owner: string,
 	state: IssueState,
+	visibility: IssueVisibility,
 	queryPageSize: number
 ): Promise<IssueInfo[]> {
 	return await searchIssues(
 		githubToken,
-		`type:issue is:public author:${owner} ${state}`,
+		`type:issue ${visibility} author:${owner} ${state}`,
 		queryPageSize
 	);
 }
@@ -19,11 +20,12 @@ export async function assigneeTo(
 	githubToken: string,
 	owner: string,
 	state: IssueState,
+	visibility: IssueVisibility,
 	queryPageSize: number
 ): Promise<IssueInfo[]> {
 	return await searchIssues(
 		githubToken,
-		`type:issue is:public assignee:${owner} ${state}`,
+		`type:issue ${visibility} assignee:${owner} ${state}`,
 		queryPageSize
 	);
 }
@@ -58,9 +60,8 @@ async function searchIssues(
 
 		result = result.concat(newResult.search.edges);
 
-		if (!newResult.search.pageInfo.hasNextPage) {
-			continueSearch = false;
-		}
+		continueSearch = newResult.search.pageInfo.hasNextPage;
+
 		endCursor = `after: "${newResult.search.pageInfo.endCursor}"`;
 	}
 
