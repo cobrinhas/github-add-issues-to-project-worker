@@ -5,6 +5,10 @@ export class IssueInfo {
 	number: string | undefined;
 	id: string | undefined;
 	repository: Repository | undefined;
+
+	static fromJson(json: { [key: string]: any }): IssueInfo {
+		return <IssueInfo>{ ...json.content };
+	}
 }
 
 class Repository {
