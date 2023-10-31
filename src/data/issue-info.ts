@@ -9,7 +9,7 @@ export class IssueInfo {
 	repository: Repository | undefined;
 
 	static fromJson(json: JSON): IssueInfo {
-		return <IssueInfo>{ ...json.content };
+		return <IssueInfo>{ ...(json.content ?? json.node) };
 	}
 }
 

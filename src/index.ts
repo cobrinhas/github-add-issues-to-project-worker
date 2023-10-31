@@ -1,7 +1,7 @@
 import { Env, fromEnv } from './config';
-import { IssueInfo, IssueState, IssueVisibility } from './data';
+import { IssueInfo, IssueState, IssueVisibility, ProjectInfo } from './data';
 import { assigneeTo, createdBy } from './issues';
-import { getProjectByNumber } from './projects';
+import { getProjectByNumber, addIssues2Project } from './projects';
 
 export default {
 	async scheduled(
@@ -14,26 +14,42 @@ export default {
 		console.info(`githubUsername: ${config.githubUsername}`);
 		console.info(`queryPageSize: ${config.queryPageSize}`);
 
-		await getAllIssues(
+		const allOpenIssues: IssueInfo[] = await getAllIssues(
 			config.githubAccessToken,
 			config.githubUsername,
 			config.queryPageSize
-		).then((result) => {
-			console.log(`getAllIssues => ${result.length}`);
-			for (let index = 0; index < result.length; index++) {
-				const element = result[index];
-				console.log(element);
-			}
-		});
+		);
 
-		return await getProjectByNumber(
+		console.log(`getAllIssues => ${allOpenIssues.length}`);
+		for (let index = 0; index < allOpenIssues.length; index++) {
+			const element = allOpenIssues[index];
+			console.log(element);
+		}
+		console.log(`\n\n`);
+
+		const projectInfo: ProjectInfo = await getProjectByNumber(
 			config.githubAccessToken,
 			config.githubUsername,
 			config.githubProjectNumber,
 			config.queryPageSize
-		).then((result) => {
-			console.log(result);
-		});
+		);
+		
+		const projectIssuesIds = projectInfo.issues.map((x) => x.id)
+
+		let issues2Add = allOpenIssues.filter(
+			(x) => !projectIssuesIds.includes(x.id)
+		);
+
+		issues2Add = [...new Set(issues2Add)];
+
+		const issuesAdded = await addIssues2Project(
+			config.githubAccessToken,
+			config.githubUsername,
+			projectInfo.id,
+			issues2Add.map((x) => x.id)
+		);
+
+		return Promise.resolve();
 	}
 };
 

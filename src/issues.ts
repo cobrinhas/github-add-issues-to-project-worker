@@ -42,10 +42,10 @@ async function searchIssues(
 	);
 
 	if (!firstResult.search.pageInfo.hasNextPage) {
-		return firstResult.search.edges as IssueInfo[];
+		return firstResult.search.edges.map((x: JSON) => IssueInfo.fromJson(x));
 	}
 
-	let result = firstResult.search.edges as IssueInfo[];
+	const result = firstResult.search.edges as IssueInfo[];
 	let continueSearch = true;
 	let endCursor = `after: "${firstResult.search.pageInfo.endCursor}"`;
 
@@ -57,7 +57,9 @@ async function searchIssues(
 			endCursor
 		);
 
-		result = result.concat(newResult.search.edges);
+		result.push(
+			...newResult.search.edges.map((x: JSON) => IssueInfo.fromJson(x))
+		);
 
 		continueSearch = newResult.search.pageInfo.hasNextPage;
 
