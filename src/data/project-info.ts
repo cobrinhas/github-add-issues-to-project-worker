@@ -1,5 +1,5 @@
 import { JSON } from './json';
-import { IssueInfo } from './issue-info';
+import { IssueId, IssueInfo } from './issue-info';
 
 export class ProjectInfo {
 	createdAt: string = '';
@@ -7,12 +7,12 @@ export class ProjectInfo {
 	number: string = '';
 	id: string = '';
 	title: string = '';
-	issues: IssueInfo[] = [];
+	issues: IssueId[] = [];
 
 	static fromJson(json: JSON): ProjectInfo {
 		return <ProjectInfo>{
 			...json,
-			issues: json.items.nodes.map((x: JSON) => IssueInfo.fromJson(x))
+			issues: json.items.nodes.map((x: JSON) => IssueInfo.fromJson(x).id)
 		};
 	}
 }

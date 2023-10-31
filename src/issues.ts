@@ -1,6 +1,6 @@
 import { graphql } from '@octokit/graphql';
 import { GraphQlQueryResponseData } from '@octokit/graphql/dist-types/types';
-import { IssueInfo, IssueState, IssueVisibility } from './data';
+import { IssueId, IssueInfo, IssueState, IssueVisibility } from './data';
 
 export async function createdBy(
 	githubToken: string,
@@ -8,7 +8,7 @@ export async function createdBy(
 	state: IssueState,
 	visibility: IssueVisibility,
 	queryPageSize: number
-): Promise<IssueInfo[]> {
+): Promise<IssueId[]> {
 	return await searchIssues(
 		githubToken,
 		`type:issue ${visibility} author:${owner} ${state}`,
@@ -22,7 +22,7 @@ export async function assigneeTo(
 	state: IssueState,
 	visibility: IssueVisibility,
 	queryPageSize: number
-): Promise<IssueInfo[]> {
+): Promise<IssueId[]> {
 	return await searchIssues(
 		githubToken,
 		`type:issue ${visibility} assignee:${owner} ${state}`,
@@ -34,7 +34,7 @@ async function searchIssues(
 	githubToken: string,
 	queryString: string,
 	queryPageSize: number
-): Promise<IssueInfo[]> {
+): Promise<IssueId[]> {
 	const firstResult = await searchIssuesAfterCursor(
 		githubToken,
 		`${queryString}`,
@@ -42,10 +42,10 @@ async function searchIssues(
 	);
 
 	if (!firstResult.search.pageInfo.hasNextPage) {
-		return firstResult.search.edges.map((x: JSON) => IssueInfo.fromJson(x));
+		return firstResult.search.edges.map((x: JSON) => IssueInfo.fromJson(x).id);
 	}
 
-	const result = firstResult.search.edges as IssueInfo[];
+	const result = firstResult.search.edges as IssueId[];
 	let continueSearch = true;
 	let endCursor = `after: "${firstResult.search.pageInfo.endCursor}"`;
 
@@ -58,7 +58,7 @@ async function searchIssues(
 		);
 
 		result.push(
-			...newResult.search.edges.map((x: JSON) => IssueInfo.fromJson(x))
+			...newResult.search.edges.map((x: JSON) => IssueInfo.fromJson(x).id)
 		);
 
 		continueSearch = newResult.search.pageInfo.hasNextPage;
