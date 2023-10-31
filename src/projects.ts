@@ -1,5 +1,5 @@
 import { GraphQlQueryResponseData, graphql } from '@octokit/graphql';
-import { ProjectInfo } from './data/project-info';
+import { ProjectInfo, AddedIssueInfo } from './data';
 
 export async function getProjectByNumber(
 	githubToken: string,
@@ -46,6 +46,59 @@ export async function getProjectByNumber(
 		result.issues = result.issues.filter((i) => Object.keys(i).length > 0);
 		return result;
 	});
+}
+
+export async function addIssues2Project(
+	githubToken: string,
+	owner: string,
+	projectId: string,
+	issuesId: string[]
+): Promise<AddedIssueInfo[]> {
+	let result: AddedIssueInfo[] = [];
+
+	for (let index = 0; index < issuesId.length; index++) {
+		const issueId = issuesId[index];
+		const newAdded = await addIssue2Project(
+			githubToken,
+			owner,
+			projectId,
+			issueId
+		);
+		result = result.concat(newAdded.addProjectV2ItemById);
+	}
+
+	return result;
+}
+
+async function addIssue2Project(
+	githubToken: string,
+	owner: string,
+	projectId: string,
+	issueId: string
+): Promise<GraphQlQueryResponseData> {
+	const graphqlWithAuth = graphql.defaults({
+		headers: {
+			authorization: `Bearer ${githubToken}`
+		}
+	});
+
+	return await graphqlWithAuth(
+		`
+        mutation($userLogin: String!, $projectId: ID!, $issueId: ID!) {
+            addProjectV2ItemById(input: {clientMutationId: $userLogin projectId: $projectId contentId: $issueId}) {
+                clientMutationId 
+                item {
+                    id
+                }
+            }
+          }
+        `,
+		{
+			userLogin: `${owner}`,
+			projectId: `${projectId}`,
+			issueId: `${issueId}`
+		}
+	);
 }
 
 async function searchProjectByNumber(
