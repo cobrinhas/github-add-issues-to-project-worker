@@ -2,11 +2,11 @@ import { JSON } from './json';
 import { IssueInfo } from './issue-info';
 
 export class ProjectInfo {
-	createdAt: string | undefined;
-	updatedAt: string | undefined;
-	number: string | undefined;
-	id: string | undefined;
-	title: string | undefined;
+	createdAt: string = '';
+	updatedAt: string = '';
+	number: string = '';
+	id: string = '';
+	title: string = '';
 	issues: IssueInfo[] = [];
 
 	static fromJson(json: JSON): ProjectInfo {

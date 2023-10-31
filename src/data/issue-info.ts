@@ -1,11 +1,11 @@
 import { JSON } from './json';
 
 export class IssueInfo {
-	createdAt: string | undefined;
-	title: string | undefined;
-	url: string | undefined;
-	number: string | undefined;
-	id: string | undefined;
+	createdAt: string = '';
+	title: string = '';
+	url: string = '';
+	number: string = '';
+	id: string = '';
 	repository: Repository | undefined;
 
 	static fromJson(json: JSON): IssueInfo {
@@ -14,5 +14,5 @@ export class IssueInfo {
 }
 
 class Repository {
-	name: string | undefined;
+	name: string = '';
 }
