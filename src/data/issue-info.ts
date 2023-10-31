@@ -1,3 +1,5 @@
+import { JSON } from './json';
+
 export class IssueInfo {
 	createdAt: string | undefined;
 	title: string | undefined;
@@ -5,6 +7,10 @@ export class IssueInfo {
 	number: string | undefined;
 	id: string | undefined;
 	repository: Repository | undefined;
+
+	static fromJson(json: JSON): IssueInfo {
+		return <IssueInfo>{ ...json.content };
+	}
 }
 
 class Repository {
