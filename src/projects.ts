@@ -12,7 +12,7 @@ export async function getProjectByNumber(
 			githubToken,
 			owner,
 			projectNumber,
-            queryPageSize
+			queryPageSize
 		);
 
 		if (!firstResult.user.projectV2.items.pageInfo.hasNextPage) {
@@ -28,7 +28,7 @@ export async function getProjectByNumber(
 				githubToken,
 				owner,
 				projectNumber,
-                queryPageSize,
+				queryPageSize,
 				endCursor
 			);
 

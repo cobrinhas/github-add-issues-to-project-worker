@@ -1,3 +1,4 @@
+import { JSON } from './json';
 import { IssueInfo } from './issue-info';
 
 export class ProjectInfo {
@@ -8,12 +9,10 @@ export class ProjectInfo {
 	title: string | undefined;
 	issues: IssueInfo[] = [];
 
-	static fromJson(json: { [key: string]: any }): ProjectInfo {
+	static fromJson(json: JSON): ProjectInfo {
 		return <ProjectInfo>{
 			...json,
-			issues: json.items.nodes.map((x: { [key: string]: any }) =>
-				IssueInfo.fromJson(x)
-			)
+			issues: json.items.nodes.map((x: JSON) => IssueInfo.fromJson(x))
 		};
 	}
 }
