@@ -41,11 +41,14 @@ async function searchIssues(
 		queryPageSize
 	);
 
+	const result = firstResult.search.edges.map(
+		(x: JSON) => IssueInfo.fromJson(x).id
+	);
+
 	if (!firstResult.search.pageInfo.hasNextPage) {
-		return firstResult.search.edges.map((x: JSON) => IssueInfo.fromJson(x).id);
+		return result;
 	}
 
-	const result = firstResult.search.edges as IssueId[];
 	let continueSearch = true;
 	let endCursor = `after: "${firstResult.search.pageInfo.endCursor}"`;
 
