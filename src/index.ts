@@ -26,9 +26,9 @@ export default {
 
 		const projectIssuesIds = projectInfo.issues;
 
-		let issues2Add = allOpenIssues.filter((x) => !projectIssuesIds.includes(x));
-
-		issues2Add = [...new Set(issues2Add)];
+		const issues2Add = [
+			...new Set(allOpenIssues.filter((x) => !projectIssuesIds.includes(x)))
+		];
 
 		return addIssues2Project(
 			config.githubAccessToken,
