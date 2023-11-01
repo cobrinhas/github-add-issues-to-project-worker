@@ -4,28 +4,30 @@ import { IssueId, IssueInfo, IssueState, IssueVisibility } from './data';
 
 export async function createdBy(
 	githubToken: string,
-	owner: string,
+	owners: string[],
 	state: IssueState,
 	visibility: IssueVisibility,
 	queryPageSize: number
 ): Promise<IssueId[]> {
+	const authors: string = owners.map((x) => `author:${x}`).join(' ');
 	return await searchIssues(
 		githubToken,
-		`type:issue ${visibility} author:${owner} ${state}`,
+		`type:issue ${visibility} ${authors} ${state}`,
 		queryPageSize
 	);
 }
 
 export async function assigneeTo(
 	githubToken: string,
-	owner: string,
+	owners: string[],
 	state: IssueState,
 	visibility: IssueVisibility,
 	queryPageSize: number
 ): Promise<IssueId[]> {
+	const assignees = owners.map((x) => `assignee:${x}`).join(' ');
 	return await searchIssues(
 		githubToken,
-		`type:issue ${visibility} assignee:${owner} ${state}`,
+		`type:issue ${visibility} ${assignees} ${state}`,
 		queryPageSize
 	);
 }

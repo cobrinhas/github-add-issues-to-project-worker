@@ -13,40 +13,48 @@ export default {
 
 		const allOpenIssues: IssueId[] = await getAllIssues(
 			config.githubAccessToken,
-			config.githubUsername,
+			config.githubIssuesOwnerUsernames,
 			config.queryPageSize
 		);
 
+		if (allOpenIssues.length == 0) {
+			return Promise.resolve();
+		}
+
 		const projectInfo: ProjectInfo = await getProjectByNumber(
 			config.githubAccessToken,
-			config.githubUsername,
+			config.githubProjectOwnerUsername,
 			config.githubProjectNumber,
 			config.queryPageSize
 		);
 
-		const projectIssuesIds = projectInfo.issues;
+		const projectIssuesIds: IssueId[] = projectInfo.issues;
 
-		const issues2Add = [
+		const issues2Add: IssueId[] = [
 			...new Set(allOpenIssues.filter((x) => !projectIssuesIds.includes(x)))
 		];
 
+		if (issues2Add.length == 0) {
+			return Promise.resolve();
+		}
+
 		return addIssues2Project(
 			config.githubAccessToken,
-			config.githubUsername,
+			config.githubProjectOwnerUsername,
 			projectInfo.id,
-			issues2Add.map((x) => x)
+			issues2Add
 		).then();
 	}
 };
 
 async function getAllIssues(
 	githubAccessToken: string,
-	githubUsername: string,
+	githubIssuesOwnerUsernames: string[],
 	queryPageSize: number
 ): Promise<IssueId[]> {
 	const createdByResult: IssueId[] = await createdBy(
 		githubAccessToken,
-		githubUsername,
+		githubIssuesOwnerUsernames,
 		IssueState.Open,
 		IssueVisibility.Public,
 		queryPageSize
@@ -54,7 +62,7 @@ async function getAllIssues(
 
 	const assigneeToResult: IssueId[] = await assigneeTo(
 		githubAccessToken,
-		githubUsername,
+		githubIssuesOwnerUsernames,
 		IssueState.Open,
 		IssueVisibility.Public,
 		queryPageSize
