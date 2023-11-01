@@ -12,6 +12,19 @@ The GitHub Project already has some automation to add to the projects the issues
 
 We then had the idea to create a cron job that gets all the issues created or assigned to us and adds them to the project.
 
+## Architecture
+
+![Diagram Flow](./docs/flow-diagram.drawio.svg)
+
+First we get all the issues created and assigned to the users. For this we use the GitHub GraphQL API, the query type, where the root type is `search`.
+
+Then we get the information of the project namely the list of its issues. Once again we use the GitHub GraphQL API, the query type, but this time the root type is `user`.
+
+We filter the first list of users to get only the issues that do not exist in the project already. In this way we minimize the calls to GitHub.
+
+And finally, we add the new issues to the project. We use the GitHub GraphQL API, the mutation type, where the root type is `addProjectV2ItemById`.
+
+
 This worker was bootstrapped using [worker brick](https://github.com/dart-pacotes/.brick) and configured with [wrangler](https://github.com/cloudflare/wrangler) CLI. You can install it via NPM: `npm install -g wrangler`
 
 ## Hooks
