@@ -1,22 +1,29 @@
 export interface Env {
 	GITHUB_ACCESS_TOKEN: string;
-	GITHUB_USERNAME: string;
-	QUERY_PAGE_SIZE: string;
+	GITHUB_PROJECT_OWNER_USERNAME: string;
+	GITHUB_ISSUES_OWNER_USERNAMES: string;
 	GITHUB_PROJECT_NUMBER: string;
+	QUERY_PAGE_SIZE: string;
 }
 
 export interface Config {
 	githubAccessToken: string;
-	githubUsername: string;
-	queryPageSize: number;
+	githubProjectOwnerUsername: string;
+	githubIssuesOwnerUsernames: string[];
 	githubProjectNumber: number;
+	queryPageSize: number;
 }
+
+const issuesOwnerUsernamesSeparator: string = ',';
 
 export function fromEnv(env: Env): Config {
 	return {
 		githubAccessToken: env.GITHUB_ACCESS_TOKEN,
-		githubUsername: env.GITHUB_USERNAME,
-		queryPageSize: Number.parseInt(env.QUERY_PAGE_SIZE ?? 10),
-		githubProjectNumber: Number.parseInt(env.GITHUB_PROJECT_NUMBER)
+		githubProjectOwnerUsername: env.GITHUB_PROJECT_OWNER_USERNAME,
+		githubIssuesOwnerUsernames: env.GITHUB_ISSUES_OWNER_USERNAMES.split(
+			issuesOwnerUsernamesSeparator
+		),
+		githubProjectNumber: Number.parseInt(env.GITHUB_PROJECT_NUMBER),
+		queryPageSize: Number.parseInt(env.QUERY_PAGE_SIZE ?? 10)
 	};
 }

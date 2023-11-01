@@ -13,13 +13,13 @@ export default {
 
 		const allOpenIssues: IssueId[] = await getAllIssues(
 			config.githubAccessToken,
-			config.githubUsername,
+			config.githubProjectOwnerUsername,
 			config.queryPageSize
 		);
 
 		const projectInfo: ProjectInfo = await getProjectByNumber(
 			config.githubAccessToken,
-			config.githubUsername,
+			config.githubProjectOwnerUsername,
 			config.githubProjectNumber,
 			config.queryPageSize
 		);
@@ -32,7 +32,7 @@ export default {
 
 		return addIssues2Project(
 			config.githubAccessToken,
-			config.githubUsername,
+			config.githubProjectOwnerUsername,
 			projectInfo.id,
 			issues2Add.map((x) => x)
 		).then();
