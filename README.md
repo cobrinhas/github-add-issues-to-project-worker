@@ -4,6 +4,14 @@ Scheduled Cloudflare Worker that all public issues created by an user to a proje
 
 ---
 
+## Why?
+
+With the increase of repositories within different organizations, it became hard to keep up with all the issues we created. To simplify the management of our work, we decided to start using the GitHub Project, where we can display all our issues from different organizations in different views (table, board, etc).
+
+The GitHub Project already has some automation to add to the projects the issues created within an organization, nevertheless, this is not a great fit since we want from multiple organizations.
+
+We then had the idea to create a cron job that gets all the issues created or assigned to us and adds them to the project.
+
 This worker was bootstrapped using [worker brick](https://github.com/dart-pacotes/.brick) and configured with [wrangler](https://github.com/cloudflare/wrangler) CLI. You can install it via NPM: `npm install -g wrangler`
 
 ## Hooks
