@@ -24,10 +24,11 @@ We filter the first list of users to get only the issues that do not exist in th
 
 And finally, we add the new issues to the project. We use the GitHub GraphQL API, the mutation type, where the root type is `addProjectV2ItemById`.
 
+## Instructions
 
 This worker was bootstrapped using [worker brick](https://github.com/dart-pacotes/.brick) and configured with [wrangler](https://github.com/cloudflare/wrangler) CLI. You can install it via NPM: `npm install -g wrangler`
 
-## Hooks
+### Hooks
 
 This repository is configured with client-side Git hooks that automatically format + lint the codebase before each push. You can install it by running the following command:
 
@@ -35,13 +36,23 @@ This repository is configured with client-side Git hooks that automatically form
 ./hooks/INSTALL
 ```
 
-## Development
+### Development
+
+To properly run this service, you will need to a setup a `.dev.vars` file. Start by creating a copy of the `.dev.vars.tpl` file and fill the variables with values appropriate for the execution context.
+
+|          Variable Name          | Variable Description                                                           |
+| :-----------------------------: | :----------------------------------------------------------------------------- |
+|      `GITHUB_ACCESS_TOKEN`      | GitHub access token.                                                           |
+| `GITHUB_PROJECT_OWNER_USERNAME` | Username of the project owner.                                                 |
+| `GITHUB_ISSUES_OWNER_USERNAMES` | Usernames (separated by `,`) of who the issues were created by or assigned to. |
+|     `GITHUB_PROJECT_NUMBER`     | Project number.                                                                |
+|        `QUERY_PAGE_SIZE`        | Amount of items to return in each page query.                                  |
 
 Run the local server via `npm run start`
 
 Trigger an instant cronjob via `curl "http://localhost:8787/__scheduled?cron=*+*+*+*+*"`
 
-## Deploy
+### Deploy
 
 Setup worker environment variables with the following one-line:
 
@@ -51,7 +62,7 @@ IFS='='; ENV_FILE=.dev.vars; cat $ENV_FILE | while read line || [[ -n $line ]]; 
 
 Deploy to Cloudflare via `npm run deploy`
 
-### Contact
+## Contact
 
 This template was prepared by:
 
