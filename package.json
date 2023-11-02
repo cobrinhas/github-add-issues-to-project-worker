@@ -9,7 +9,7 @@
 	"private": true,
 	"scripts": {
 		"start": "wrangler dev --test-scheduled",
-		"deploy": "wrangler publish",
+		"deploy": "wrangler deploy",
 		"lint": "prettier --plugin-search-dir . --check . && eslint .",
 		"format": "prettier --plugin-search-dir . --write ."
 	},
